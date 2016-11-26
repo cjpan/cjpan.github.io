@@ -2,3 +2,5 @@ node_modules
 public
 hexo
 hexo_1
+.deploy_git
+themes/npm-debug.log
