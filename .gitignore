@@ -4,3 +4,4 @@ hexo
 hexo_1
 .deploy_git
 themes/npm-debug.log
+db.json
