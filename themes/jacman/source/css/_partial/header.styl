@@ -1,21 +1,36 @@
 body
   >header
     width 100%
-    height 400px 
+    height 375px 
+    max-width 100%
+    max-height 100%
     box-shadow 2px 4px 5px hsla(0,1%,1%,.2)
     if(banner_img)
       background url("../"+banner-img) center color-theme
     else
       background color-theme
     background-repeat no-repeat
+    @media tabletmax
+      height 300px
+      if(banner_tablet)
+        background url("../"+banner-img-tablet) center color-theme
+      background-repeat no-repeat
+    @media minimax 
+      height 210px
+      if(banner_mini)
+        background url("../"+banner-img-mini) center color-theme
+      background-repeat no-repeat
+    @media phonemax 
+      height 120px
+      if(banner_phone)
+        background url("../"+banner-img-phone) center color-theme
+      background-repeat no-repeat
     color color-white
     >div
       width 95%
       margin 0 auto
       position relative
       overflow hidden
-      @media tablet
-        width 93%
     a
       display block
       color color-black
@@ -69,12 +84,13 @@ body
       font-size font-size+10
 
 .navbar
-  position absolute
-  width 2em
-  right 0em
+  position fixed 
+  display block
+  width 3em
+  right 3em
   top 1em
   padding 0.5em
-  @media tablet
+  @media tablet 
     display none
 
 .navbutton::before
@@ -86,38 +102,42 @@ body
   padding-left 1em
 
 header nav
-  float left    
-  width 100%
-  @media phone
-    width 50%
-  @media tablet
-    float right
-    width auto
-    margin-top 1em
-    max-height none
-  font-size font-size+12.5
+  float right
+  width auto
+  margin-top 3em
+  max-height none
   padding-top 0em
-  margin-right 8em
-  max-height 0.01em
   transition max-height 1s ease-out
+  visibility hidden 
+  margin-right 3em
+  @media phone 
+    margin-right 3em
+  @media tablet
+    margin-right 9em
+    visibility visible
   ul
-    @media tablet
-      float right
+    @media mini 
+      float right 
   ul li
+    text-align right
+    @media tabletmax
+      background-color #eee 
     @media tablet
-      float left
+      float left 
   ul li a
     padding 0.2em 0 0.2em 1em
     @media tablet
-      padding 0.2em 1.5em
+      padding 0.2em 0.5em
     &:hover
       background saturate(darken(color-theme, 25%), 10%)
       color color-font-nav
 
 .shownav
   max-height 40em
+  visibility visible
 
 .search
+  display none
   padding 0.1em 0 0 1em
   input
     -webkit-appearance textfield
