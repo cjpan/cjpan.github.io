@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://cjpan.github.io/about/index.html</loc>
+    
+    <lastmod>2016-12-05T12:36:22.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://cjpan.github.io/categories/index.html</loc>
+    
+    <lastmod>2016-12-05T12:25:39.528Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://cjpan.github.io/tags/index.html</loc>
+    
+    <lastmod>2016-12-05T12:25:12.260Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://cjpan.github.io/2016/11/22/test-2/</loc>
     
     <lastmod>2016-11-22T15:15:17.610Z</lastmod>

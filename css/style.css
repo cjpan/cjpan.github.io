@@ -395,20 +395,37 @@ body >header {
   box-shadow: 2px 4px 5px rgba(3,3,3,0.2);
   background: url("../img/banner.jpg") center #000;
   background-repeat: no-repeat;
+}
+@media only screen and (min-width: 1024px) {
+  body >header {
+    height: 330px;
+  }
+}
+@media only screen and (min-width: 768px) {
+  background url("../"+banner-img-tablet) {
+    height: 250px;
+  }
+}
+@media only screen and (min-width: 568px) {
+  background url("../"+banner-img-mini) {
+    height: 200px;
+  }
+}
+background url("../"+banner-img-phone) {
   color: #fff;
 }
-body >header >div {
+background url("../"+banner-img-phone) >div {
   width: 95%;
   margin: 0 auto;
   position: relative;
   overflow: hidden;
 }
 @media only screen and (min-width: 1024px) {
-  body >header >div {
+  background url("../"+banner-img-phone) >div {
     width: 93%;
   }
 }
-body >header a {
+background url("../"+banner-img-phone) a {
   display: block;
   color: color-black;
 }
