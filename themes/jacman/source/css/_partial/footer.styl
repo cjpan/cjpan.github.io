@@ -17,9 +17,9 @@ footer
       float left
       position relative
     span
-      display block
+      display none 
       width 0.5em
-      height 6.25em
+      height 1.25em
       border-right 0.125em solid color-white
       margin 0 auto
       @media mini
@@ -30,17 +30,20 @@ footer
 .author
   width w=(110/16)em
   height w
-  margin 0 auto
+  margin 1 0 0 1.5em
   background no-repeat url("../"+author-img) left top 
   background-size w w
   border-radius (w/2)
   transition transform 2s ease-out
+  position absolute
   &:hover
     transform rotateZ(360deg)
+  display none
   @media mini
-    position: absolute;
+    position absolute
     top 1em
     margin 0 0 1.5em
+    display block
 
 .info
   if ShowCustomFont
@@ -54,10 +57,12 @@ footer
   width 90%
   margin 0 auto
   color color-white
+  text-align center
   @media mini
     margin 1.5em 0 2em 0
     float left
     width 75%
+    text-align left
 
 .social-font
   width 100%
