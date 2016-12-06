@@ -503,11 +503,7 @@ body >header a {
   right: 3em;
   top: 1em;
   padding: 0.5em;
-}
-@media only screen and (min-width: 1024px) {
-  .navbar {
-    display: none;
-  }
+  display: none;
 }
 .navbutton::before {
   font-family: "FontAwesome";
@@ -521,7 +517,7 @@ body >header a {
 header nav {
   float: right;
   width: auto;
-  margin-top: 3em;
+  margin-top: 1em;
   max-height: none;
   padding-top: 0em;
   -webkit-transition: max-height 1s ease-out;
@@ -529,7 +525,6 @@ header nav {
   -o-transition: max-height 1s ease-out;
   -ms-transition: max-height 1s ease-out;
   transition: max-height 1s ease-out;
-  visibility: hidden;
   margin-right: 3em;
 }
 @media only screen and (min-width: 568px) {
@@ -540,26 +535,16 @@ header nav {
 @media only screen and (min-width: 1024px) {
   header nav {
     margin-right: 9em;
-    visibility: visible;
   }
 }
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 568px) {
   header nav ul {
     float: right;
   }
 }
 header nav ul li {
   text-align: right;
-}
-@media only screen and (max-width: 1024px) {
-  header nav ul li {
-    background-color: #eee;
-  }
-}
-@media only screen and (min-width: 1024px) {
-  header nav ul li {
-    float: left;
-  }
+  float: left;
 }
 header nav ul li a {
   padding: 0.2em 0 0.2em 1em;
