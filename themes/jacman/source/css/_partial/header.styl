@@ -90,8 +90,7 @@ body
   right 3em
   top 1em
   padding 0.5em
-  @media tablet 
-    display none
+  display none
 
 .navbutton::before
   font-family font-icon-family
@@ -104,26 +103,21 @@ body
 header nav
   float right
   width auto
-  margin-top 3em
+  margin-top 1em
   max-height none
   padding-top 0em
   transition max-height 1s ease-out
-  visibility hidden 
   margin-right 3em
   @media phone 
     margin-right 3em
   @media tablet
     margin-right 9em
-    visibility visible
   ul
-    @media mini 
+    @media phone 
       float right 
   ul li
     text-align right
-    @media tabletmax
-      background-color #eee 
-    @media tablet
-      float left 
+    float left 
   ul li a
     padding 0.2em 0 0.2em 1em
     @media tablet
