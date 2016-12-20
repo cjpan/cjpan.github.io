@@ -1,0 +1,624 @@
+
+ <!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>用Pandas操作Excel文件 | Chengjie Pan&#39;s Site</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Chengjie Pan">
+    
+
+    
+    <meta name="description" content="最近工作中在做字库，源是英文，翻译成中日韩文，然后做成字库做到设备里去，比较无聊的事情。翻译的部门提供了译文的Excel文件，其中列出了屏幕上显示的消息字符串的译文以及每个消息的字体的大小，比如:
+
+
+
+Id
+Messages
+Font Size
+
+
+
+
+1
+查找设备
+14Reg
+
+
+1
+装置を検索しています
+14Reg
+
+
+2
+未找到设备
+16Reg
+
+
+2
+装置が見つかりません
+16Reg">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用Pandas操作Excel文件">
+<meta property="og:url" content="http://cjpan.github.io/2016/12/20/process_excel_with_pandas/index.html">
+<meta property="og:site_name" content="Chengjie Pan's Site">
+<meta property="og:description" content="最近工作中在做字库，源是英文，翻译成中日韩文，然后做成字库做到设备里去，比较无聊的事情。翻译的部门提供了译文的Excel文件，其中列出了屏幕上显示的消息字符串的译文以及每个消息的字体的大小，比如:
+
+
+
+Id
+Messages
+Font Size
+
+
+
+
+1
+查找设备
+14Reg
+
+
+1
+装置を検索しています
+14Reg
+
+
+2
+未找到设备
+16Reg
+
+
+2
+装置が見つかりません
+16Reg">
+<meta property="og:updated_time" content="2016-12-20T14:39:50.476Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用Pandas操作Excel文件">
+<meta name="twitter:description" content="最近工作中在做字库，源是英文，翻译成中日韩文，然后做成字库做到设备里去，比较无聊的事情。翻译的部门提供了译文的Excel文件，其中列出了屏幕上显示的消息字符串的译文以及每个消息的字体的大小，比如:
+
+
+
+Id
+Messages
+Font Size
+
+
+
+
+1
+查找设备
+14Reg
+
+
+1
+装置を検索しています
+14Reg
+
+
+2
+未找到设备
+16Reg
+
+
+2
+装置が見つかりません
+16Reg">
+
+    
+    <link rel="alternative" href="/atom.xml" title="Chengjie Pan&#39;s Site" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Chengjie Pan&#39;s Site">Chengjie Pan&#39;s Site</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:cjpan.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2016/12/20/process_excel_with_pandas/" title="用Pandas操作Excel文件" itemprop="url">用Pandas操作Excel文件</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Chengjie Pan" target="_blank" itemprop="author">Chengjie Pan</a>
+		
+  <p class="article-time">
+    <time datetime="2016-12-20T12:16:36.000Z" itemprop="datePublished"> Published 2016-12-20</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#读入Excel文件"><span class="toc-number">1.</span> <span class="toc-text">读入Excel文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作Excel数据"><span class="toc-number">2.</span> <span class="toc-text">操作Excel数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写入Excel文件"><span class="toc-number">3.</span> <span class="toc-text">写入Excel文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一般示例"><span class="toc-number">4.</span> <span class="toc-text">一般示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多参考"><span class="toc-number">5.</span> <span class="toc-text">更多参考</span></a></li></ol>
+		
+		</div>
+		
+		<p>最近工作中在做字库，源是英文，翻译成中日韩文，然后做成字库做到设备里去，比较无聊的事情。<br>翻译的部门提供了译文的Excel文件，其中列出了屏幕上显示的消息字符串的译文以及每个消息的字体的大小，<br>比如:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Id</th>
+<th style="text-align:center">Messages</th>
+<th style="text-align:center">Font Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">查找设备</td>
+<td style="text-align:center">14Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">装置を検索しています</td>
+<td style="text-align:center">14Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">未找到设备</td>
+<td style="text-align:center">16Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">装置が見つかりません</td>
+<td style="text-align:center">16Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">早上好</td>
+<td style="text-align:center">14Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">おはようございます</td>
+<td style="text-align:center">14Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">程序</td>
+<td style="text-align:center">14Reg</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">プログラム</td>
+<td style="text-align:center">14Reg</td>
+</tr>
+</tbody>
+</table>
+<p>因为嵌入式设备的资源限制，要从通用字库中筛选出只在消息字符串中用到的字加入设备的字库文件，Font大小不同的字需要加入不同大小的字库文件。所用到的字库工具要求输入一个筛选文件，其中包含的是所需的字，以Unicode的形式顺序储存，如<code>0x1234</code>。所以一个工作就是从Excel文件中遍历所有字符串，把字符串里的不同的字挑出来做成一个列表转成unicode写到筛选文件里去。</p>
+<p>本着“超过15分钟的重复劳动都要自动化！”的精神，于是写了个简单的Python程序来做这个事情。逻辑本身很不难，但从Excel中读取数据的部分对我来说是新的。正好手头机器上已经装了pandas，就直接在pandas上做了，在这里记录总结一下。<br>(pandas是Python的一个数据处理包，<a href="http://pandas.pydata.org/" target="_blank" rel="external">主页</a>）</p>
+<h2 id="读入Excel文件"><a href="#读入Excel文件" class="headerlink" title="读入Excel文件"></a>读入Excel文件</h2><p>导入pandas模块：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import pandas as pd</div></pre></td></tr></table></figure></p>
+<p>读入待处理的excel文件，存到data的变量中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = pd.read_excel(&apos;foo.xls&apos;)</div></pre></td></tr></table></figure></p>
+<p>默认读入的是第一个sheet，如果要选择sheet的话，可以：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = pd.read_excel(&apos;foo.xls&apos;, sheetname=1) # 2nd sheet</div></pre></td></tr></table></figure></p>
+<p>或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = pd.read_excel(&apos;foo.xls&apos;, sheetname=&apos;Sheet1&apos;) # &apos;Sheet1&apos; sheet</div></pre></td></tr></table></figure></p>
+<p>又或者<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data = pd.read_excel(&apos;foo.xls&apos;, sheetname=[0, 1, &apos;Sheet5&apos;] ) # Multi sheets</div></pre></td></tr></table></figure></p>
+<p>读入单个sheet后的data的类型是pandas的DataFrame类型，简单来讲DataFrame是一个二维表结构，包含了行列的索引。<br>如果读入的是多个sheet，则pandas是值为DataFrame类型的一个dictionary，这个应该可以理解。<br>read_excel()也可以用来读取csv文件。csv文件也可以用read_csv()来做。</p>
+<h2 id="操作Excel数据"><a href="#操作Excel数据" class="headerlink" title="操作Excel数据"></a>操作Excel数据</h2><p>显示列的名字：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data.columns</div></pre></td></tr></table></figure></p>
+<p>读取某一列：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data[&apos;Id&apos;]</div></pre></td></tr></table></figure></p>
+<p>读取某几列：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data[[&apos;Messages&apos;, &apos;Font Size&apos;]]</div></pre></td></tr></table></figure></p>
+<p>条件筛选：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">data[data[&apos;Font Size&apos;] == &apos;14Reg&apos;]</div></pre></td></tr></table></figure></p>
+<p>把字体大小是14Reg的消息都读出来：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">msgs_reg14 = data[data[&apos;Font Size&apos;] == &apos;14Reg&apos;][&apos;Messages&apos;]</div></pre></td></tr></table></figure></p>
+<p>或者，把消息中字体大小是14Reg的选出来也是可以的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">msgs_reg14 = data[&apos;Messages&apos;][data[&apos;Font Size&apos;] == &apos;14Reg&apos;]</div></pre></td></tr></table></figure></p>
+<p>之后的遍历消息字符串的逻辑很普通，额外的就是一些细节的处理，就不提了。</p>
+<h2 id="写入Excel文件"><a href="#写入Excel文件" class="headerlink" title="写入Excel文件"></a>写入Excel文件</h2><p>这次工作中不需要修改再保存Excel文件，但是也研究了一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">out = pd.ExcelWriter(&apos;output.xls&apos;)</div><div class="line">new_df.to_excel(out)</div><div class="line">out.save()</div></pre></td></tr></table></figure></p>
+<h2 id="一般示例"><a href="#一般示例" class="headerlink" title="一般示例"></a>一般示例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">import pandas as pd</div><div class="line"></div><div class="line"># read sheet in</div><div class="line">data = pd.read_excel(&apos;foo.xls&apos;, sheetname=1)</div><div class="line"># view table types</div><div class="line">print data.dtypes</div><div class="line"># view a column</div><div class="line">print data[&apos;A&apos;]</div><div class="line"></div><div class="line">&apos;&apos;&apos;</div><div class="line"># create a new column and calculate values</div><div class="line">for i in data.index:</div><div class="line">    data[&apos;C&apos;][i] = data[&apos;A&apos;][i] + data[&apos;B&apos;][i]</div><div class="line">&apos;&apos;&apos;</div><div class="line"></div><div class="line"># write Excel file</div><div class="line">out = pd.ExcelWriter(&apos;output.xls&apos;)</div><div class="line">new_df.to_excel(out)</div><div class="line">out.save()</div></pre></td></tr></table></figure>
+<h2 id="更多参考"><a href="#更多参考" class="headerlink" title="更多参考"></a>更多参考</h2><p><a href="http://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_excel.html" target="_blank" rel="external">pandas官方文档</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/tips/">tips</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/pandas/">pandas</a><a href="/tags/excel/">excel</a><a href="/tags/python/">python</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://cjpan.github.io/2016/12/20/process_excel_with_pandas/" data-title="用Pandas操作Excel文件 | Chengjie Pan&#39;s Site" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2016/12/06/hello-world/"  title="使用GitHub+Hexo搭建博客">
+ <strong>下一篇：</strong><br/> 
+ <span>使用GitHub+Hexo搭建博客
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="2016/12/20/process_excel_with_pandas/" data-title="用Pandas操作Excel文件" data-url="http://cjpan.github.io/2016/12/20/process_excel_with_pandas/"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#读入Excel文件"><span class="toc-number">1.</span> <span class="toc-text">读入Excel文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作Excel数据"><span class="toc-number">2.</span> <span class="toc-text">操作Excel数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#写入Excel文件"><span class="toc-number">3.</span> <span class="toc-text">写入Excel文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#一般示例"><span class="toc-number">4.</span> <span class="toc-text">一般示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#更多参考"><span class="toc-number">5.</span> <span class="toc-text">更多参考</span></a></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+<div class="github-card">
+<p class="asidetitle">Github Card</p>
+<div class="github-card" data-github="cjpan" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
+
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">Categories</p>
+		<ul>
+		
+		  
+			<li><a href="/categories/blog/" title="blog">blog<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/tips/" title="tips">tips<sup>1</sup></a></li>
+		  
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">Tags</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/pandas/" title="pandas">pandas<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/excel/" title="excel">excel<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello, I am Chengjie Pan. <br/>
+			This is my blog, believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		<a href="https://github.com/cjpan" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="Chengjie Pan">Chengjie Pan</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"cjpan"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="Back to Top"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
